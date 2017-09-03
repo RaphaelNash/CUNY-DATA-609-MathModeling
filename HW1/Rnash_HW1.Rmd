@@ -1,0 +1,157 @@
+---
+title: "CUNY Data 609 HW1"
+author: "Raphael Nash"
+date: "8/31/2017"
+output:
+  pdf_document: default
+  html_document: default
+  
+---
+
+# page 8 # 10 
+*Your grandparents have an annuity. The value of the annuity increases each month by an automatic deposit of 1% interest on the previous month's balance. Your grandparents withdraw $1000 at the beginning of each month for living expenses. Currently, they have $50,000 in the annuity. Model the annuity with a dynamical system. Will the annuity run out of money? When? Hint: What value will an have when the annuity is depleted?*
+
+Let's say that $a_n$ is the value of the annuity after n months 
+
+Also $a_0$, the initial value is $50000
+
+The system can be modeled as:
+
+$a_{n+1} = .01(a_n) - 1000$
+
+At n=0 we have: $a_{n+1} = .01(a_n) - 1000$
+
+
+
+```{r}
+
+
+a <- 50000
+
+for (n in 0:300) {  # for saftey limiting the loop so we do not get an infinite loop
+  a <- a+(.01*a) - 1000
+
+  if ( a< 2000) {  # If a<2000 then we can not take another withdrawal
+    break
+  }
+}
+
+```
+
+
+After `r n ` months the annuity is depleted
+
+# page 34 # 13
+
+13. Consider the spreading of a rumor through a company of 1000 employees, all working in the same building. We assume that the spreading of a rumor is similar to the spreading of a contagious disease (see Example 3, Section 1.2) in that the number of people hearing the rumor each day is proportional to the product of the number who have heard the rumor previously and the number who have not heard the rumor. This is given by
+
+$$r_{n+1} = r_n + k r_n (1000-n)$$
+
+where k is a parameter that depends on how fast the rumor spreads and n is the number of days. Assume k D 0:001 and further assume that four people initially have heard the rumor. How soon will all 1000 employees have heard the rumor?
+
+```{r}
+
+k<-.001 
+n<-0
+r<-4
+
+while ( r < 1000 ) {
+  r <- trunc( r +( k *r* (1000-n) )) 
+  n <- n+1 
+
+  
+}
+
+
+
+```
+
+
+The rumor is has fully spread thrugh the company after `r n-1 ` days. 
+
+
+# Page 55 #6
+
+*An economist is interested in the variation of the price of a single product. It is ob- served that a high price for the product in the market attracts more suppliers. However, increasing the quantity of the product supplied tends to drive the price down. Over time, there is an interaction between price and supply. The economist has proposed the following model, where $P_n$ represents the price of the product at year n, and $Q_n$ represents the quantity. Find the equilibrium values for this system.*
+
+$$ P_{n+1} = P_n - 0.1(Q_n - 500)$$
+
+$$ Q_{n+1} = P_n + .02 (P_n -100 )$$
+
+
+*a. Does the model make sense intuitively? What is the signi cance of the constants 100 and 500? Explain the signficance of the signs of the constants  0.1 and 0.2.*
+
+
+Yes the model makes sense.  The basically it is saying that as new firms enter the market the price goes down ( the negative sign in the price model in front of .01) and the quantity goes up ( the positive sign in the quantity model in from of 0.2)
+
+
+*b. Test the initial conditions in the following table and predict the long term behavior*
+
+Case |Price|Quantity
+-----|-----|-------
+A|100|500
+B|200|500
+C|100|600
+D|100|400
+
+
+
+
+
+
+```{r}
+
+library("ggplot2")
+
+graph_pq <- function(p,q, scenario, years  )  {
+  p_init <- p
+  q_init <- q 
+  case_df <- data.frame(
+    n = 0,
+    p = p,
+    q = q 
+  )
+  
+  title <- paste(  scenario, "Initial Values:" ,  "p=", p_init , "q=", q_init,  sep = " ")
+  
+  for (n in 1:years ) {
+    p <- (p - (0.1 * (q - 500)))
+    q <- (q + (0.2 * (p - 100))) 
+    n <- n 
+    
+    case_df <- rbind ( case_df , data.frame(
+                                    n = n,
+                                    p = p,
+                                    q = q )
+                       )
+    
+  }
+  
+  ggplot(case_df, aes(n)) + 
+    geom_point(aes(y = p, colour = "price")) + 
+    geom_point(aes(y = q, colour = "quantity")) + ggtitle(title) +
+    theme(axis.title.y=element_blank())  + 
+    ylab("year")
+  
+}
+
+```
+```{r}
+graph_pq( 100, 500, "Case A", 30) 
+```
+```{r}
+graph_pq( 200, 500, "Case B", 30) 
+```
+
+```{r}
+graph_pq( 100, 600, "Case C", 30) 
+```
+
+```{r}
+graph_pq( 100, 400, "Case D", 30) 
+```
+
+
+
+
+
