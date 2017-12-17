@@ -1,0 +1,122 @@
+---
+title: "CUNY Data 609 HW 12"
+author: "Raphael Nash"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document: default
+---
+
+#p576 #2
+
+*Consider a company that allows back ordering. That is, the company notifies customers that a temporary stock-out exists and that their order will be filled shortly. What conditions might argue for such a policy?*
+
+**If storage costs exceed stockout costs**
+
+
+*What effect does such a policy have on storage costs?* **It reduces them**
+
+*Should costs be assigned to stock-outs? Why? How would you make such an assignment?* **YES, there is a risk that a customer may leave and/or demand a lower price if an item is stocked out**
+
+*What assumptions are implied by the model in Figure 13.7?*
+
+* **demand is constant**
+* **Items are not re-odered until a stockout occurs**
+* **There is no cost to a stock out**
+
+Suppose a ``loss of goodwill cost'' of $w$ dollars per unit per day is assigned to each stock-out. Compute the optimal order quantity $Q^*$ and interpret your model.
+
+Standard Cost equation: 
+$sc= d + \frac{sqt^{*}}{2}$
+
+Loss of goodwill: 
+$gw = \frac{wq(t-t^{*})}{2}$
+
+
+cost per cycle w/goodwill loss 
+$c = d + \frac{sqt^{*}}{2} + \frac{wq(t-t^{*})}{2}$
+
+average daily cost:  
+$c = \frac{d}{t} + \frac{\frac{sqt^{*}}{2}}{t} + \frac{\frac{wq(t-t^{*})}{2}}{t}$  
+
+Break equation into time before stockout and time ofter stockout by replacing 
+$\frac{t^{*}}{t}$ with $a$ and $\frac{t - t^{*}}{t}$ with $(1 - a)$
+
+$c = \frac{d}{t} + at\frac{sq}{2} + (1-a)t\frac{wq}{2}$
+
+quantity is really a constant times time therefore subsitute $q = rt$
+
+$c = \frac{d}{t} + a\frac{srt}{2} + (1-a)\frac{wrt}{2}$$
+
+
+$c' = \frac{-d}{t^{2}} + a\frac{sr}{2} + (1-a)\frac{wr}{2} = 0$
+
+Critical point:
+
+$T^{*} = \sqrt{\frac{2d}{asr + (1-a)wr}}$.
+
+Optimal order quantity: $Q^{*} = rT^{*}$ 
+
+Therefore: 
+$Q^{*} = r\sqrt{\frac{2d}{asr + (1-a)wr}}$
+
+#585 #2 
+find the local minimum value of the function:
+
+$f(x,y) = 3x^{2} + 6xy + 7y^{2} - 2x + 4y$
+
+$\frac{df}{dx} = 6x + 6y - 2 = 0$
+
+$\frac{df}{dy} = 6x + 14y + 4 = 0$
+
+Solve for Y:
+
+$6x + 6y - 2 = 6x + 14y + 4$
+$6y - 2 = 14y + 4$
+$-8y = 6$
+$y = -\frac{3}{4}$
+
+Solve for X
+$x = \frac{26}{24}$
+
+min/max point is at $(\frac{26}{24},-\frac{3}{4} )$
+
+Determine if this is a min or max by taking the second derivative:
+
+$\frac{df^{2}}{dx^{2}} = 6$
+$\frac{df^{2}}{dy^{2}} = 14$
+
+This is a min since second derivative is postive 
+
+
+#591 #5
+
+Using the method of Lagrange multipliers, find the hottest point $(x,y,z)$ along the elliptical orbit: $4x^{2} + y^{2} + 4z^{2} = 16$
+
+Where the temperature function is: $T(x,y,z) = 8x^{2} + 4yz - 16z + 600$ 
+
+$L(x,y,z,\lambda) = 8x^{2} + 4yz - 16z + 600 -\lambda(4x^{2} + y^{2} + 4z^{2} - 16)$
+
+$\frac{dl}{dx} = 16x - 8x\lambda = 0$
+$\lambda = 2$
+$\frac{dl}{dz} = 4y - 16 - 4\lambda = 0$
+$y = 6$
+
+
+$\frac{dl}{dy} = 4z - 2y\lambda = 0$
+$4z = 2y\lambda$
+$z = 6$
+
+
+$\frac{dl}{d\lambda} = 4x^{2} + y^{2} + 4z - 16 = 0$
+$4x^{2} + 36 + 24 - 16 = 0$
+$4x^{2} = -44$
+$x = \sqrt{-11}$
+
+The min or max temp is at  $(\sqrt{-11},6,6)$
+
+Determine if this is the hotest or coldest point by second derivative test
+
+$\frac{dl^{2}}{dy^{2}} = -2\lambda = -12$
+
+$(\sqrt{-11},6,6)$ is the hotest point since second derivative is negative.  

@@ -1,0 +1,54 @@
+---
+title: "CUNY Data 609 HW9"
+author: "Raphael Nash"
+date: "10/11/2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#p 385 #1a
+
+![](385_1a.png)
+
+![](385_2a1.jpg)
+Both players do not have a pure strategy.   Rose will always pick row R1, but colin will pick either C1 or C2.  
+
+<hr>
+#p 385 #2c
+
+![](385_2c.png)
+
+![](385_2c1.jpg)
+
+There is a pure Nash equilibrium here.  
+
+The pitcher should throw a Knucklebal and the batter should guess aknNuckleball. 
+
+Then the batting average will be .250
+<hr>
+
+#p420 #1
+
+![](420_a.png)
+
+
+![](420_a1.jpg)
+
+<hr>
+
+#p440 #2
+Use movement diagrams to find all the stable outcomes in Problems 1 through 5. Then use strategic moves (using Table 10.2 ) to determine if Rose can get a better outcome.
+
+
+![](440_2.png)
+
+
+![](440_21.png)
+
+
+

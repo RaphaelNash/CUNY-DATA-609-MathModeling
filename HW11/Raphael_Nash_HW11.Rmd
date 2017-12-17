@@ -1,0 +1,104 @@
+---
+title: CUNY Data 609 HW 11
+author: Raphael Nash
+output: pdf_document
+---
+
+
+#529 #1
+
+Verify that the given function pair is a solution to the first order system:
+
+$x=-e^t, y=e^t$
+
+$\frac{dx}{dt}=-y, \frac{dy}{dt}=-x$
+
+
+We need to verify: $\frac{dx}{dt}+ y = 0$
+
+We know that:  $\frac{dx}{dt} = -e^t$
+
+we subsitute:  $-e^t + e^t ?=? 0$ Yes 
+
+Check for second side of pair:   
+
+we need to verify : $\frac{dy}{dt}+y=-0$
+
+We know that:  $\frac{dy}{dt} = e^t$
+
+we subsitute:  $e^t + e^t ?=? 0$ NO
+
+The pair is **NOT** a solution 
+
+<hr>
+
+#529 #6
+Find and classify the points of the given autonomous system:  
+
+$\frac{dx}{dt}  = -(y-1), \frac{dy}{dt}=x-2$
+
+Set both to zero and solve:
+
+-(y-1) = 0
+
+-y+1=0
+
+1=y
+
+----
+
+x-2 = 0
+
+x=2 
+
+
+The ony critical point is at (2,1).  
+
+
+Since the first derivative is linear, the second derivative will be a constant.   Since the second derivative is a constant the 
+
+
+#p 546 #1
+<hr>
+
+Apply the first and second derivative tests to the function $f(y) =  \frac{y^a}{e^{by}}$ by to show that y=a/b is a unique critical point that yields the relative maximum f(a/b). Show also that f(y) approaches zero as y tends to infinity 
+
+
+First Derivative:
+
+$f'(y) = y^{(a-1)} e^{(-b y)} (a - b y)$
+
+
+First Derivative test:  
+
+At what point does the first derivative = 0?  
+$y^{(a-1)} e^{(-b y)} (a - b y) = 0$
+
+$y=\frac{a}{b}$
+
+Since the first derivative is 0 at $y=\frac{a}{b}$ then $\frac{a}{b}$ is a critical point
+
+
+Second Derivative: 
+
+$f''(y) = y^{(a - 2)} e^{-by} (a^2 - a (2 b y + 1) + b^2 y^2)$
+
+Second Derivative Test:
+
+$f''(\frac{a}{b}) =y^{(a - 2)} e^{-by} (a^2 - a (2 b y + 1) + b^2 y^2)$
+
+$f''(\frac{a}{b}) = a^2 y^{(a - 2)} e^{-by} + b^2 y^a e^{-b y} - a y^{(a - 2)} e^{-b y} - 2 a b y^{(a - 1)} e^{-b y}$
+
+Since leading term is a^2 and this is >0 and the leading term a^2 approaches infinity, therefore as f(y) approaches zero y goes to infinity.   
+
+NOTE:  In this  (546 #1)  I uses Wolfram Alpha to preform the rote manipulations,  However the interperatations are my own.  
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,183 @@
+---
+title: "CUNY DATA 609 Final Project"
+author: "Alex Low and Raphael Nash"
+output:
+  html_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+# p183 #5 
+
+![](https://raw.githubusercontent.com/RaphaelNash/CUNY-DATA-609-MathModeling/master/Final%20Project/183_5.png)
+
+
+
+```{r}
+library(ggplot2)
+library(splines)
+
+```
+
+
+```{r}
+
+sheep_pop_df <- data.frame(
+  year = c(1814,1824,1834,1844,1854,1864),
+  pop = c(125,275,830,1200,1750,1650)
+)
+```
+
+##Data Exploration
+```{r}
+
+ggplot (data=sheep_pop_df, aes( x=year, y=pop)  ) + geom_point() +
+  geom_point(x=1824, y= 275, color = "blue", size = 3) + 
+  geom_point(x=1854, y= 1750, color = "blue", size = 3) + 
+  ylab("population") +
+  xlab("year") +
+  ylim(0,1900)
+
+```
+
+As you can see this is not really a good fit for a linear equation as the last population in 1864 is less than the population in 1854 and the slope of the line is different between 1814-1824 and 1824-1854.  Therefore, we need to look at a different method, splines.   The points at 1824 and 1854 look like places the slope of the function naturally changes therefore are good places to put "cut points".  I am using natural cut points.  However, another method is to use 1st and 3rd quantiles.  They would be 1826.5 and 1851.5.  However, this is nearly rounding error in this case.   
+
+
+##regression
+
+**Create Linear Regression model**
+```{r}
+lm_model<-lm(pop ~ year ,data = sheep_pop_df )
+summary(lm_model)
+```
+**splines model with 2 cut points**
+```{r}
+splines_model<-lm(pop ~ bs(year,knots = c(1824,1854)),data = sheep_pop_df )
+summary(splines_model)
+```
+The reason there are N/A values is there are too few points for the significance tests.  This is a red flag that the model will overfit.  
+
+##Plot Splines vs Linear
+```{r warning =FALSE}
+
+years_df <- data.frame(  year = seq(1814,1864 )   )
+
+prediction_df <- years_df 
+prediction_df$pop_from_splines <- predict(splines_model, years_df)
+
+prediction_df$pop_from_lm <- predict(lm_model, years_df)
+
+head(prediction_df)
+
+```
+
+```{r}
+
+ggplot (data=sheep_pop_df, aes( x=year, y=pop)  ) + 
+  geom_point() +
+  ylab("population") +
+  xlab("year") + 
+  ylim(-100,2100) +
+  geom_point(x=1824, y= 275, color = "blue", size = 3) + 
+  geom_point(x=1854, y= 1750, color = "blue", size = 3) +
+  geom_line(data=prediction_df, aes(x= year, y=pop_from_splines,  colour="Line from Cubic Splines" ))   +
+  geom_line(data=prediction_df, aes(x= year, y=pop_from_lm,   colour="Line from Linear Regression" ) ) 
+
+```
+
+In this case the linear model is better then the splines model due to the lack of detail in the observed data therefore; the splines model overfits the data.  However, the linear model will fail to take into account the decline sheep population post 1854.    
+ 
+# p376 #4   
+
+![](https://github.com/stiltsie/cuny/blob/master/609_Q2.tif?raw=true)
+
+## Part 1: Building a Decision Tree to Support NBC's Decision Making Process.
+
+To help NBC maximize its profits over the long term, we built a decision tree using decision theory. In particular, we tried to determine whether it was worthwhile for NBC to hire the market research firm.  Other sub-decisions in the tree included whether NBC should make a show in general when it had no external input; whether it should make a show in the instances when the market research firm predicted a hit, and whether it should make a show in the instances when the firm predicted a flop.  
+
+![](https://raw.githubusercontent.com/RaphaelNash/CUNY-DATA-609-MathModeling/master/Final%20Project/Final%20Project%20No%202.jpg) 
+
+The top branch shows the expected value of moving forward without any input from a market research firm. To maximize profit, NBC would want to make the show in each case.  The expected value per show is $25,000.
+
+The bottom branch shows the expected value of hiring a market research firm. If the market research firm predicts a hit, it would make sense for NBC to make the show, but if the firm predicts a flop, NBC should cut its losses and not make the show.  Overall expected value per show is $35,000.
+
+**Conclusion:** Since the overall expected value of hiring the market research firm is greater than the expected value of not hiring the firm, NBC should hire the firm and follow its advice.  
+
+## Part 2: Building a Computer Program to Support NBC's Decision Making Process.  
+
+Since it is possible that the various probabilities will change over time - including the overall probability of a hit versus a flop, as well as the market research firm's performance in predicting a hit versus a flop - we decided to build a computer program to assist NBC in continuing to assess whether it makes sense to engage the market research firm.
+
+```{r}
+nbc_decision <- function(x,y,z,a,b,c) {
+
+  #x: probability of a hit
+  #y: if show is hit, probability that firm will predict a hit
+  #z: if show is flop, probability that firm will predict a flop
+  #a: earnings for a hit
+  #b: loss for a flop (note: loss of 100000 should be marked as 100000, NOT -100000)
+  #c: cost of hiring a market research firm
+    
+  branch1_ev = (x*a) + ((1-x)*-b)
+  
+  branch1_dec = ifelse(branch1_ev>0,branch1_ev,0)
+  
+  branch2_hit = (x*y)+((1-x)*(1-z))
+  
+  branch2_hit_ev = (((x*y)/branch2_hit) * (a-c)) + (((1-x)*(1-z))/branch2_hit)*(-b-c)
+  branch2_hit_dec = ifelse(branch2_hit_ev>-c,branch2_hit_ev,-c)
+  
+  branch2_flop = (x*(1-y))+((1-x)*z)
+  
+  branch2_flop_ev = (((x*(1-y))/branch2_flop) * (a-c)) + ((((1-x)*z)/branch2_flop)*(-b-c))
+  branch2_flop_dec = ifelse(branch2_flop_ev>-c,branch2_flop_ev,-c)
+  
+  branch2_ev = (branch2_hit*branch2_hit_dec)+(branch2_flop*branch2_flop_dec)
+  
+  print(paste("Expected Value if NBC Does Not Hire Market Research Firm:",branch1_dec))
+  
+  print(paste("Expected Value if NBC Does Hire Market Research Firm:",branch2_ev))
+  
+  ifelse(branch2_ev>branch1_dec, "Hire Market Research Firm","Don't Hire Market Research Firm")
+    
+}
+```
+
+## Part 3: Sensitivity Analyses Using Computer Program  
+
+Below we use the program to advise NBC under a few different scenarios. In the first case we assess the current state of affairs.  In subsequent scenarios, we first test several variations on the firm's performance to assess at what probabilities it no longer makes sense to hire the market research firm, and then test a few scenarios where the payoffs change and/or the cost of hiring the research firm changes.  
+
+```{r}
+
+#Current state of affairs:
+
+nbc_decision(0.25,0.9,0.8,400000,100000,40000)
+
+#Scenario 1: Market research firm's chance of accurately predicting a hit (when the show is a hit) drops to 80%.
+
+nbc_decision(0.25,0.8,0.8,400000,100000,40000)
+
+#Scenario 2: Market research firm's chance of accurately predicting a hit and a flop (when the show is a hit and a flop respectively) drops to 79%.
+
+nbc_decision(0.25,0.79,0.79,400000,100000,40000)
+
+#Scenario 3: Market research firm's chance of accurately predicting a flop (when the show is a flop) drops to 70%.
+
+nbc_decision(0.25,0.9,0.7,400000,100000,40000)
+
+#Scenario 4: Market research firm's chance of accurately predicting a flop (when the show is a flop) drops to 66%.
+
+nbc_decision(0.25,0.9,0.66,400000,100000,40000)
+
+#Scenario 5: Cost of market research firm increases.
+
+nbc_decision(0.25,0.9,0.8,400000,100000,45000)
+
+#Scenario 6: Loss from a flop increases.
+
+nbc_decision(0.25,0.9,0.8,400000,150000,40000)
+
+#Scenario 7: Earnings from a hit declines and price of market research firm increases.
+
+nbc_decision(0.25,0.9,0.8,300000,100000,45000)
+
+```

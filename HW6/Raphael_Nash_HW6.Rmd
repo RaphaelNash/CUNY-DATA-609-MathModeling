@@ -1,0 +1,105 @@
+---
+title: "CUNY DATA 609 HW 6"
+author: "Raphael Nash"
+date: "9/21/2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("ggplot2")
+```
+
+
+
+#p251 #1
+
+Nutritional Requirements -- A rancher has determined that the minimum weekly nutri- tional requirements for an average-sized horse include 40 lb of protein, 20 lb of carbohy- drates, and 45 lb of roughage. These are obtained from the following sources in varying amounts at the prices indicated:
+
+
+|                                  | Protien (lb) | Carbohydrates (lb) | Roughage (lb) | Cost|
+|---------------------------------:|-------------:|-------------------:|--------------:|------:|
+| (H) Hay (per bale)                    | .5           | 2.0                | 5.0           | $1.80  |
+| (T) Oats (Per Sack)                   | 1.0          | 4.0                | 2.0           |$3.50   |
+| (B) Feeding Blocks (block)            | 2.0          | .5                 | 1.0           | $0.40  |
+| (P) High Protien Concentrate (sack)   | 6.0          |1.0                 |2.5            |1.0    |
+| Requirements/hourse/week          | 40.0         |20                  |45       | | 
+
+
+Objective minimize cost: $C =1.8H + 3.5T + .4B + 1P $
+
+Constraints:    |                                    |
+--------------:|-----------------------------------:|
+ Protien (lb) | $.5H +1 T +2.0B + 6.0P \le 40$  |
+Carbohydrates  (lb) | $2H + 4.0 T + .5 B + 1.0 | \le 20$ | 
+Roughage (lb) | $5.0H + 2.0 T + 1.0 B + 2.5 = 45 \le 45$ |
+limiting factor:| $H,T,B,P \ge 0$|  
+
+#P 264 #6
+
+Maximize 10x + 35y 
+subject to : 
+$8x + 6y \le 48$ (board feet lumber)
+$6y \le 48 - 8x$
+$y \le 8 - (4/3)x$
+<br>
+$4x + y \le 20$ (hours of carpentry)
+$y \le 20 - 4x$
+<br>
+$y\ge 5$ (demand)
+<br>
+$x,y \ge 0$ (non-negativity) 
+
+
+```{r}
+
+lumber_func <- function (x) { 8- x }
+hours <- function(x) {20-(4*x) }
+demand <- function (x) { 5  }
+objective <- function(x,y) { 10 *x + 35 *y}
+
+
+
+ ggplot(data.frame(x = c(0, 5)), aes(x)) +
+  stat_function(fun = lumber_func, aes(colour = "lumber"), linetype="dashed") +
+  stat_function(fun = hours, aes(colour = "hours"), linetype="dashed") +
+ stat_function(fun = demand, aes(colour = "demand"), linetype="dashed") + 
+    stat_function(fun = objective, aes(colour = "objective")) + 
+
+   geom_area(aes ( y=  8- x) , fill = "green", alpha = .1) + 
+   geom_point( aes ( x=0 , y= 8)) + 
+      geom_point( aes ( x=3 , y= 5)) + 
+ 
+  geom_ribbon(data = data.frame (x=c(0,3.8)) , aes(ymin = 5 , ymax = 20-(4*x), max = 3), fill = "red", alpha = .2) +
+ scale_colour_manual("Functions", values = c("red", "blue", "green", "purple")) 
+
+
+```
+
+```{r}
+
+c (objective ( 0,8), objective ( 3,5)) 
+
+```
+
+
+Objective function is maximized at (0,8) = 280
+
+
+#P 284 #1
+For the example problem in this section, determine the sensitivity of the optimal solution to a change in $c_2$ using the objective function $25x_1 + c_2x_2$.
+
+
+Maximize $z=25x_1 + 30x_2$
+
+lumber slope = $\frac{-2}{3}$
+
+Labor slope = $\frac{-5}{4}$
+
+$\frac{-2}{3} \le \frac{-25}{c_2} \le \frac{-5}{4}$
+
+$20 \le c_2 \le 37.5$ 
+
+ 

@@ -1,0 +1,100 @@
+---
+title: "HW3"
+author: "Raphael Nash"
+date: "9/5/2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("ggplot2")
+```
+
+#p113 #2
+2. The following table gives the elongation e in inches per inch (in./in.) for a given stress $S$ on a steel wire measured in pounds per square inch ($lb/in.^2$ ). Test the model $e=c_1 S$  by plotting the data. Estimate $c_1$ graphically.
+
+```{r}
+
+problem_data <- data.frame (
+  S = c(5,10,20,30,40,50,60,70,80,90,100),
+  e = c(0,19,57,94,134,173,216,256,297,343,390)
+)
+
+```
+
+
+```{r}
+
+ggplot( data= problem_data , aes( x=S, y=e) ) + geom_point()
+
+```
+
+```{r}
+#c1 <- (297-19)/(90-10)
+c1 <- (297-256)/(90-80)
+c1
+```
+
+
+```{r}
+ggplot( data= problem_data , aes( x=S, y=e) ) + geom_point() + geom_abline(intercept=0, slope=c1) 
+
+```
+Moving intercept manually 
+```{r}
+ggplot( data= problem_data , aes( x=S, y=e) ) + geom_point() + geom_abline(intercept=-21, slope=c1)
+
+```
+
+
+#p 121 2.a
+
+```{r}
+
+problem_data_121_2a <- data.frame(
+  x = c(1.0,2.3,3.7,4.2,6.1,7.0), 
+  y = c(3.6,3.0,3.2,5.1,5.3,6.8)
+)
+
+lm <- lm(y ~ x, problem_data_121_2a)
+lm$coefficients
+```
+
+
+```{r}
+ggplot(data=problem_data_121_2a) +
+  geom_point(aes(x=x, y=y)) + 
+  geom_abline(intercept= lm$coefficients[[1]], slope=lm$coefficients[[2]])
+
+```
+ 
+ The equation that theese points fit is: y = `r round(lm$coefficients[[2]],1)  `x  +`r round(lm$coefficients[[1]],1)`
+ 
+#p 157 #4
+In the following data, X represents the diameter of a ponderosa pine measured at breast height, and Y is a measure of volume--number of board feet divided by 10. Make a scatterplot of the data. Discuss the appropriateness of using a 13th-degree polynomial that passes through the data points as an empirical model. If you have a computer available, t a polynomial to the data and graph the results.
+
+
+
+```{r}
+problem_157_4 = data.frame(
+  x = c(17,19,20,22,23,25,31,32,33,36,37,38,39,41),
+  y=c(19,25,32,51,57,71,141,123,187,192,205,252,248,294)
+  ) 
+
+ggplot(problem_157_4, aes(x=x, y=y) ) + geom_point() +
+  stat_smooth(method="lm", se=TRUE, fill=NA, formula=y ~ poly(x, 13, raw=TRUE), aes(colour = '13 Degree Polynomial Fit')) +
+  stat_smooth(method="lm", se=TRUE, fill=NA, formula=y ~ poly(x, 2, raw=TRUE), aes(colour = '2nd Degree Polynomial Fit')) 
+  
+```
+
+As you can see the 13th degree and 2rd degree polynomial fit the data pretty good.  The 13th degree goes through more points and has less "error" based on the data provided.   It however probably overfits the data.   The 2nd degree also fits the data pretty good.   The 2nd degree poly has a lot less chance of overfitting the model since it does not turn on a dime to adjust to every point on the graph.   It may though have more overall "error"
+
+
+ 
+ 
+

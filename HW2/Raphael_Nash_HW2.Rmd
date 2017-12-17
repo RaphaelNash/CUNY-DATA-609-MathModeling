@@ -1,0 +1,196 @@
+---
+title: "HW2"
+author: "Raphael Nash"
+date: "9/3/2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("ggplot2")
+```
+
+# p69 # 12
+
+
+**For the scenarios presented in Problems 9.17, identify a problem worth studying and list the variables that affect the behavior you have identified. Which variables would be neglected completely? Which might be considered as constants initially? Can you identify any submodels you would want to study in detail? Identify any data you would want collected.**
+
+
+**A company with a fleet of trucks faces increasing maintenance costs as the age and mileage of the trucks increase.**
+
+Identify a problem:
+
+Total Cost of ownership of the truck
+
+What variables to be considered:
+
+- Cost of truck
+- Engine Size
+- Maintence schedule
+- Fuel type and effeciency
+- Type of driving city vs highway
+- Reliability of make/model
+
+What vairables could be neglected:
+
+- Type of financing
+- Cost of employee's 
+
+Initial Constants:
+
+- Routine Maintence Schedule
+- Insurance cost 
+
+Submodels:
+
+- Miles per galon based on driving conditions
+- Non Scheduled maintence based on brand/driving
+- Depreciate per month
+
+Data needing to be collected:
+
+- Non scheduled maintence
+- Full useage
+- Driving logs of driving types and conditions
+
+
+# p 79 # 11 
+
+**determine whether the data set supports the stated proportionality model.**
+
+$$y \propto x^3$$
+
+
+```{r}
+problem_data <- data.frame( 
+  y = c(0,1,2,6,14,24,37,58,82,114),
+  x = c(1,2,3,4,5,6,7,8,9,10 )
+  )
+
+problem_data
+
+```
+
+
+
+```{r}
+problem_data["y_predicted"] = problem_data$x^3
+problem_data
+```
+
+```{r}
+ggplot(problem_data) + geom_line(aes(x=x, y=y , color = "blue" )) +
+  geom_line(aes(x=x, y=y_predicted , color = "red" )) +
+  scale_color_manual(labels = c("Actual", "Predicted"), values = c("blue", "red")) 
+```
+
+Is there a ratio of the Y to Y predicted?
+
+
+
+```{r}
+coef = mean (problem_data[,"y"]^(1/3)/problem_data[,"y_predicted"]  )
+coef
+```
+
+```{r}
+problem_data["y_predicted_adjusted"] <- problem_data$x^3 * coef
+problem_data
+```
+
+
+```{r}
+ggplot(problem_data) + geom_line(aes(x=x, y=y , color = "blue" )) +
+geom_line(aes(x=x, y=y_predicted_adjusted , color = "red" )) +
+  scale_color_manual(labels = c("Actual", "Predicted (adjusted) "), values = c("blue", "red")) +
+  ylab("y")
+
+```
+
+I would say the proportionality $y \propto x^3$ does not really hold up.  
+
+# p94 # 4
+
+**Lumber Cutters Lumber cutters wish to use readily available measurements to estimate the number of board feet of lumber in a tree. Assume they measure the diameter of the tree in inches at waist height. Develop a model that predicts board feet as a function of diameter in inches. Use the following data for your test:**
+
+```{r}
+
+lumber_data = data.frame( 
+      x= c(17,19,20,23,25,28,32,38,39,41),
+      y= c(19,25,32,57,71,113,123,252,259,294))
+lumber_data
+
+```
+**The variable x is the diameter of a ponderosa pine in inches, and y is the number of board feet divided by 10.**
+
+**The variable x is the diameter of a ponderosa pine in inches, and y is the number of board feet divided by 10.**
+
+
+
+**a. Consider two separate assumptions, allowing each to lead to a model. Completely analyze each model.** 
+
+geometric proportionality is based on $f(x)= \pi r^2 h$
+
+**i. Assume that all trees are right-circular cylinders and are approximately the same height.**
+
+In this scenario $y \propto x^2$ since on the $r^2$ term is considard 
+
+```{r}
+
+part_i <- lumber_data
+
+coef <-   mean ((part_i[,"y"]^(1/2))/part_i[,"x"]  )^2
+coef
+```
+
+```{r}
+
+part_i["y_predicted"] <- coef * (part_i["x"] ) ^2
+
+
+ggplot(part_i) + geom_point(aes(x=x, y=y , color = "blue" )) +
+geom_point(aes(x=x, y=y_predicted , color = "red" )) +
+  scale_color_manual(labels = c("Actual", "Predicted"), values = c("blue", "red")) +
+  ylab("y")
+
+
+```
+
+
+**ii. Assume that all trees are right-circular cylinders and that the height of the tree is proportional to the diameter.**
+
+
+```{r}
+
+part_ii <- lumber_data
+
+coef <-   mean (part_ii[,"y"]^(1/3)/part_ii[,"x"]  )^3
+coef
+```
+
+```{r}
+
+part_ii["y_predicted"] <- coef * (part_ii["x"] ) ^3
+
+part_ii
+```
+
+```{r}
+ggplot(part_ii) + geom_point(aes(x=x, y=y , color = "blue" )) +
+geom_point(aes(x=x, y=y_predicted , color = "red" )) +
+  scale_color_manual(labels = c("Actual", "Predicted"), values = c("blue", "red")) +
+  ylab("y")
+
+part_ii
+```
+** Which model appears to be better? Why? Justify your conclusions.**
+
+Part II where the height is proportional to the radius seems to make poor sense for 2 reasons.
+
+1.  This makes sense from what I know about trees older trees are taller and have a larger trunk radius. 
+2. The graph of actual vs predicted boord feet seems to fit better on that model.  
